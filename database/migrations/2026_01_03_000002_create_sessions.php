@@ -2,12 +2,18 @@
 
 declare(strict_types=1);
 
-/*
- * database/migrations/2026_01_03_000002_create_sessions.php
- *
- * Purpose: DB-backed admin sessions
- * Real implementation: Stage 3
- *
- * This is a scaffold placeholder. Replace with the implementation
- * from the corresponding stage of the master development brief.
- */
+return function (PDO $pdo): void {
+    $pdo->exec("
+        CREATE TABLE sessions (
+            id VARCHAR(128) NOT NULL PRIMARY KEY,
+            user_id INT UNSIGNED NULL,
+            ip_address VARCHAR(45) NULL,
+            user_agent VARCHAR(255) NULL,
+            payload TEXT NOT NULL,
+            last_activity INT UNSIGNED NOT NULL,
+            INDEX idx_sessions_user (user_id),
+            INDEX idx_sessions_activity (last_activity),
+            CONSTRAINT fk_sessions_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    ");
+};

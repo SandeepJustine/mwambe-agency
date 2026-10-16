@@ -2,12 +2,27 @@
 
 declare(strict_types=1);
 
-/*
- * app/Models/ServiceRepository.php
- *
- * Purpose: Published services
- * Real implementation: Stage 4
- *
- * This is a scaffold placeholder. Replace with the implementation
- * from the corresponding stage of the master development brief.
- */
+namespace Mwambe\Models;
+
+use Mwambe\Core\Database;
+
+final class ServiceRepository
+{
+    public function __construct(private readonly Database $db) {}
+
+    public function published(): array
+    {
+        return $this->db->select("
+            SELECT * FROM services WHERE workflow_status = 'published'
+            ORDER BY position ASC, name ASC
+        ");
+    }
+
+    public function featured(): array
+    {
+        return $this->db->select("
+            SELECT * FROM services WHERE workflow_status = 'published' AND is_featured = 1
+            ORDER BY position ASC
+        ");
+    }
+}

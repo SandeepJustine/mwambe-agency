@@ -56,4 +56,32 @@ final class Container
         }
         return $reflection->newInstanceArgs($args);
     }
+
+    public function getWithArgs(string $id, array $args = []): object
+    {
+        if (!class_exists($id)) {
+            throw new \RuntimeException("Cannot instantiate {$id}");
+        }
+        $reflection = new \ReflectionClass($id);
+        $constructor = $reflection->getConstructor();
+        if ($constructor === null) {
+            return $reflection->newInstance();
+        }
+        $resolved = [];
+        $argIndex = 0;
+        foreach ($constructor->getParameters() as $param) {
+            $type = $param->getType();
+            if ($type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
+                $resolved[] = $this->get($type->getName());
+            } elseif (array_key_exists($argIndex, $args)) {
+                $resolved[] = $args[$argIndex];
+                $argIndex++;
+            } elseif ($param->isDefaultValueAvailable()) {
+                $resolved[] = $param->getDefaultValue();
+            } else {
+                throw new \RuntimeException("Cannot resolve parameter \${$param->getName()} for {$id}");
+            }
+        }
+        return $reflection->newInstanceArgs($resolved);
+    }
 }

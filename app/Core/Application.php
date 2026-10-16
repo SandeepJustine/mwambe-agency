@@ -7,6 +7,8 @@ namespace Mwambe\Core;
 use Mwambe\Core\Http\Request;
 use Mwambe\Core\Http\Response;
 use Mwambe\Core\Http\Router;
+use Mwambe\Services\Audit;
+use Mwambe\Services\MediaUploader;
 use Throwable;
 
 final class Application
@@ -24,20 +26,24 @@ final class Application
         $this->container = new Container();
         $this->registerCoreServices();
 
+        // Make the app globally accessible for the `config()` helper
+        $GLOBALS['__mwambe_app'] = $this;
+
         $this->request = Request::capture();
-        $this->router  = new Router($this->container);
+
+        // Start session early (safe for all routes)
+        $this->container->get(Auth::class)->startSession();
+
+        $this->router = new Router($this->container);
 
         $this->configureErrorHandling();
         $this->configureTimezone();
 
-        // Register routes (returns closure that defines them)
-        $routesFile = $this->basePath . '/routes/web.php';
-        if (is_file($routesFile)) {
-            (require $routesFile)($this->router);
-        }
-        $adminRoutes = $this->basePath . '/routes/admin.php';
-        if (is_file($adminRoutes)) {
-            (require $adminRoutes)($this->router);
+        foreach (['web', 'admin'] as $file) {
+            $routes = $this->basePath . '/routes/' . $file . '.php';
+            if (is_file($routes)) {
+                (require $routes)($this->router);
+            }
         }
     }
 
@@ -48,7 +54,6 @@ final class Application
         } catch (Throwable $e) {
             $response = $this->handleException($e);
         }
-
         $response->send();
     }
 
@@ -57,6 +62,23 @@ final class Application
         $this->container->set(Container::class, $this->container);
         $this->container->set(Config::class, $this->config);
         $this->container->set(Application::class, $this);
+
+        $this->container->bind(Database::class, fn () => new Database($this->config));
+        $this->container->bind(Csrf::class,     fn ($c) => new Csrf($c->get(Config::class)));
+        $this->container->bind(Auth::class,     fn ($c) => new Auth(
+            $c->get(Database::class),
+            $c->get(Config::class),
+            $this
+        ));
+        $this->container->bind(Audit::class,    fn ($c) => new Audit(
+            $c->get(Database::class),
+            $c->get(Auth::class)
+        ));
+        $this->container->bind(MediaUploader::class, fn ($c) => new MediaUploader(
+            $c->get(Database::class),
+            $c->get(Config::class),
+            $c->get(Auth::class)
+        ));
     }
 
     private function configureTimezone(): void
@@ -100,7 +122,7 @@ final class Application
         return Response::html(
             '<!doctype html><html><head><title>Something went wrong</title></head><body>'
             . '<main style="max-width:640px;margin:4rem auto;font-family:system-ui;padding:2rem">'
-            . '<h1 style="color:#C9A22B">Something went wrong</h1>'
+            . '<h1 style="color:#C29A2C">Something went wrong</h1>'
             . '<p>We could not complete your request. Please try again, or contact '
             . '<a href="mailto:mwambeagency@gmail.com">mwambeagency@gmail.com</a>.</p>'
             . '</main></body></html>',

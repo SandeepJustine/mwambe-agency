@@ -2,12 +2,26 @@
 
 declare(strict_types=1);
 
-/*
- * app/Models/SectorRepository.php
- *
- * Purpose: Published sectors
- * Real implementation: Stage 4
- *
- * This is a scaffold placeholder. Replace with the implementation
- * from the corresponding stage of the master development brief.
- */
+namespace Mwambe\Models;
+
+use Mwambe\Core\Database;
+
+final class SectorRepository
+{
+    public function __construct(private readonly Database $db) {}
+
+    public function published(): array
+    {
+        return $this->db->select("
+            SELECT * FROM sectors WHERE workflow_status = 'published'
+            ORDER BY position ASC, name ASC
+        ");
+    }
+
+    public function findBySlug(string $slug): ?array
+    {
+        return $this->db->selectOne("
+            SELECT * FROM sectors WHERE slug = ? AND workflow_status = 'published'
+        ", [$slug]);
+    }
+}
