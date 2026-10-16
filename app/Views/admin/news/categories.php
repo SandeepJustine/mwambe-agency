@@ -32,6 +32,7 @@
                         <td><code><?= e($c['slug']) ?></code></td>
                         <td><?= (int) $c['article_count'] ?></td>
                         <td>
+                            <a href="/admin/news/categories/<?= (int) $c['id'] ?>/edit" class="btn btn--sm">Edit</a>
                             <form method="post" action="/admin/news/categories/<?= (int) $c['id'] ?>/delete"
                                   onsubmit="return confirm('Delete this category? Articles using it will become uncategorised.');">
                                 <?= $csrf->field() ?>

@@ -6,7 +6,7 @@
     <header class="admin__panel-head">
         <h2>News &amp; Insights</h2>
         <div class="button-row">
-            <a href="/admin/news/categories" class="btn btn--sm btn--ghost-light">Manage categories</a>
+            <a href="/admin/news/categories" class="btn btn--sm btn--ghost-grey">Manage categories</a>
             <a href="/admin/news/new" class="btn btn--sm btn--primary">New article</a>
         </div>
     </header>

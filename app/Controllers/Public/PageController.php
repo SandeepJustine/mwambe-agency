@@ -24,6 +24,7 @@ final class PageController
             return $this->notFound($request);
         }
         $sections = $this->pages->sectionsFor((int) $page['id']);
+
         return $this->render('public/page', [
             'title'    => $page['meta_title'] ?: $page['title'],
             'page'     => $page,

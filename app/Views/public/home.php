@@ -188,7 +188,7 @@
         <div class="section__header">
             <p class="eyebrow eyebrow--gold">Our Impact</p>
             <h2 class="section__title">Verified indicators.</h2>
-            <p class="section__lede">Only figures confirmed by an authorised administrator appear here.</p>
+            <p class="section__lede">See how we are making impact in different sectors and communities.</p>
         </div>
         <div class="grid grid--3">
             <?php foreach ($impactIndicators as $ind): ?>
@@ -261,17 +261,23 @@
 <?php endif; ?>
 
 <!-- ================= PARTNERSHIP CTA ================= -->
-<section class="section section--dark" data-reveal>
-    <div class="container section--center">
-        <p class="eyebrow eyebrow--gold">Partner With Us</p>
-        <h2 class="section__title">The strongest partnerships are not simply transactions.</h2>
-        <p class="section__lede">
-            We welcome partnerships across programme co-design, funding, technical assistance,
-            mentorship, training, research, sponsorship, equipment, market linkages and employment pathways.
-        </p>
-        <p class="section__actions">
-            <a class="btn btn--primary" href="/partner-with-us">Start a Conversation</a>
-            <a class="btn btn--ghost-light" href="/contact">Contact MWAMBE</a>
-        </p>
+<section class="cta" data-reveal>
+    <div class="cta__bg" aria-hidden="true">
+        <span class="cta__glow"></span>
+        <span class="cta__ring"></span>
+    </div>
+    <div class="container cta__inner">
+        <div class="cta__card">
+            <p class="cta__eyebrow">Partner With Us</p>
+            <h2 class="cta__title">The strongest partnerships are not simply transactions.</h2>
+            <p class="cta__lede">
+                We welcome partnerships across programme co-design, funding, technical assistance,
+                mentorship, training, research, sponsorship, equipment, market linkages and employment pathways.
+            </p>
+            <div class="cta__actions">
+                <a class="btn btn--primary" href="/partner-with-us">Start a Conversation</a>
+                <a class="btn btn--ghost-light" href="/contact">Contact MWAMBE</a>
+            </div>
+        </div>
     </div>
 </section>

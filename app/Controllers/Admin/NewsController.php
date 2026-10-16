@@ -146,18 +146,43 @@ final class NewsController
             ]);
         }
 
+        // Optional image replacement — falls back to the existing media_id if none uploaded.
         $mediaId = $this->maybeUploadImage($request);
-        if ($mediaId === null) $mediaId = $existing['media_id'];
-        $data['media_id'] = $mediaId;
+        if ($mediaId === null) {
+            $mediaId = $existing['media_id'];
+        }
+
+        // Build the UPDATE parameter array explicitly. Do NOT reuse $data
+        // wholesale — it contains keys (author_id) that the UPDATE doesn't
+        // bind, and PDO with emulation off rejects extra keys.
+        $updateParams = [
+            'slug'             => $data['slug'],
+            'title'            => $data['title'],
+            'category_id'      => $data['category_id'],
+            'excerpt'          => $data['excerpt'],
+            'body'             => $data['body'],
+            'media_id'         => $mediaId,
+            'published_at'     => $data['published_at'],
+            'workflow_status'  => $data['workflow_status'],
+            'meta_title'       => $data['meta_title'],
+            'meta_description' => $data['meta_description'],
+            'id'               => $id,
+        ];
 
         $this->db->execute("
             UPDATE news_articles SET
-                slug = :slug, title = :title, category_id = :category_id,
-                excerpt = :excerpt, body = :body, media_id = :media_id,
-                published_at = :published_at, workflow_status = :workflow_status,
-                meta_title = :meta_title, meta_description = :meta_description
+                slug = :slug,
+                title = :title,
+                category_id = :category_id,
+                excerpt = :excerpt,
+                body = :body,
+                media_id = :media_id,
+                published_at = :published_at,
+                workflow_status = :workflow_status,
+                meta_title = :meta_title,
+                meta_description = :meta_description
             WHERE id = :id
-        ", array_merge($data, ['id' => $id]));
+        ", $updateParams);
 
         $this->audit->log('news.update', 'news_articles', $id, 'Updated article: ' . $data['title']);
         $this->flash('Article saved.');
@@ -225,6 +250,69 @@ final class NewsController
         $this->audit->log('news.category.delete', 'news_categories', $id, 'Deleted category');
         $this->flash('Category deleted. Articles that used it are now uncategorised.');
         return Response::redirect('/admin/news/categories');
+    }
+
+    public function categoriesEdit(Request $request, string $id): Response
+    {
+        $id = (int) $id;
+        $category = $this->db->selectOne('SELECT id, slug, name FROM news_categories WHERE id = ?', [$id]);
+        if ($category === null) return Response::html('<h1>404</h1>', 404);
+
+        return $this->render('admin/news/category-edit', [
+            'title'       => 'Edit category',
+            'activeNav'   => 'news',
+            'breadcrumbs' => [
+                ['label' => 'Dashboard', 'url' => '/admin'],
+                ['label' => 'News & Insights', 'url' => '/admin/news'],
+                ['label' => 'Categories', 'url' => '/admin/news/categories'],
+                ['label' => 'Edit'],
+            ],
+            'category' => $category,
+            'flash'    => $this->popFlash(),
+            'errors'   => [],
+        ]);
+    }
+
+    public function categoriesUpdate(Request $request, string $id): Response
+    {
+        $id = (int) $id;
+        $category = $this->db->selectOne('SELECT id, slug, name FROM news_categories WHERE id = ?', [$id]);
+        if ($category === null) return Response::html('<h1>404</h1>', 404);
+
+        $name = $request->string('name');
+        $slug = $request->string('slug') ?: $this->slugify($name);
+        $errors = [];
+        if ($name === '') {
+            $errors['name'] = 'Category name is required.';
+        }
+        if ($slug === '') {
+            $errors['slug'] = 'Slug is required.';
+        }
+        if (!$errors) {
+            $dup = $this->db->selectOne('SELECT id FROM news_categories WHERE slug = ? AND id <> ?', [$slug, $id]);
+            if ($dup) $errors['slug'] = 'That slug is already in use.';
+        }
+
+        if ($errors) {
+            return $this->render('admin/news/category-edit', [
+                'title'       => 'Edit category',
+                'activeNav'   => 'news',
+                'breadcrumbs' => [
+                    ['label' => 'Dashboard', 'url' => '/admin'],
+                    ['label' => 'News & Insights', 'url' => '/admin/news'],
+                    ['label' => 'Categories', 'url' => '/admin/news/categories'],
+                    ['label' => 'Edit'],
+                ],
+                'category' => array_merge($category, ['name' => $name, 'slug' => $slug]),
+                'flash'    => $this->popFlash(),
+                'errors'   => $errors,
+            ]);
+        }
+
+        $this->db->execute('UPDATE news_categories SET name = ?, slug = ? WHERE id = ?', [$name, $slug, $id]);
+        $this->audit->log('news.category.update', 'news_categories', $id, 'Updated category: ' . $name);
+        $this->flash('Category updated.');
+        return Response::redirect('/admin/news/categories/' . $id . '/edit');
     }
 
     /* ---------- Helpers ---------- */

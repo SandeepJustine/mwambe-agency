@@ -91,12 +91,14 @@ return function (Mwambe\Core\Http\Router $router): void {
     $router->post('/admin/services/{id}/edit',     [ServiceController::class, 'update'], $editors);
     $router->post('/admin/services/{id}/delete',   [ServiceController::class, 'delete'], $editors);
 
-    // News — categories routes MUST come before {id}/edit
+// News — categories routes MUST come before {id}/edit
     $router->get('/admin/news',                              [NewsController::class, 'index'],            $editors);
     $router->get('/admin/news/new',                          [NewsController::class, 'create'],           $editors);
     $router->post('/admin/news',                             [NewsController::class, 'store'],            $editors);
     $router->get('/admin/news/categories',                   [NewsController::class, 'categoriesIndex'],  $editors);
     $router->post('/admin/news/categories',                  [NewsController::class, 'categoriesStore'],  $editors);
+    $router->get('/admin/news/categories/{id}/edit',         [NewsController::class, 'categoriesEdit'],   $editors);
+    $router->post('/admin/news/categories/{id}/edit',        [NewsController::class, 'categoriesUpdate'], $editors);
     $router->post('/admin/news/categories/{id}/delete',      [NewsController::class, 'categoriesDelete'], $editors);
     $router->get('/admin/news/{id}/edit',                    [NewsController::class, 'edit'],             $editors);
     $router->post('/admin/news/{id}/edit',                   [NewsController::class, 'update'],           $editors);

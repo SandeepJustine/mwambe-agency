@@ -49,12 +49,33 @@ final class Application
 
     public function run(): void
     {
+        $this->trackVisit();
+
         try {
             $response = $this->router->dispatch($this->request);
         } catch (Throwable $e) {
             $response = $this->handleException($e);
         }
         $response->send();
+    }
+
+    private function trackVisit(): void
+    {
+        try {
+            $method = strtoupper($this->request->method());
+            if ($method !== 'GET') return;
+            $path = $this->request->path();
+            if (str_starts_with($path, '/admin') || str_starts_with($path, '/assets')) return;
+            if (preg_match('/\.(css|js|png|jpg|jpeg|gif|svg|ico|webp|woff2?|ttf|map)$/i', $path)) return;
+
+            $db = $this->container->get(Database::class);
+            $db->execute(
+                'INSERT INTO page_views (path, ip_address, user_agent) VALUES (?, ?, ?)',
+                [$path, $_SERVER['REMOTE_ADDR'] ?? null, substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 255)]
+            );
+        } catch (Throwable $e) {
+            // tracking is best-effort; never break requests
+        }
     }
 
     private function registerCoreServices(): void

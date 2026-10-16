@@ -585,6 +585,52 @@ address { font-style: normal; }
 .alert--error   { background: #FBEDEC; color: #7A1F1F; border-left-color: #C0392B; }
 .alert ul { margin: var(--sp-2) 0 0; padding-left: 1.2rem; }
 
+/* ---------- 21. Who We Are intro (two-column) ---------- */
+.intro-grid {
+    display: grid; gap: var(--sp-8);
+    grid-template-columns: 1fr;
+    align-items: center;
+}
+@media (min-width: 900px) { .intro-grid { grid-template-columns: 1.15fr 0.85fr; } }
+.intro__text { display: grid; gap: var(--sp-6); }
+.intro__cards { display: grid; gap: var(--sp-4); list-style: none; padding: 0; margin: 0; }
+.intro__cards .card { display: flex; flex-direction: column; gap: var(--sp-3); }
+.intro__cards .card__title { margin-bottom: 0; }
+
+.intro__visual { display: flex; justify-content: center; }
+.intro__panel {
+    position: relative;
+    width: 100%; max-width: 460px;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: var(--sp-9) var(--sp-6) var(--sp-7);
+    border-radius: var(--radius-lg);
+    background:
+        radial-gradient(120% 120% at 50% -10%, rgba(194,154,44,.18) 0%, transparent 55%),
+        radial-gradient(110% 110% at 50% 110%, rgba(35,31,32,.96) 0%, var(--ink) 60%);
+    color: var(--paper);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+}
+.intro__logo { width: clamp(120px, 22vw, 180px); height: auto; object-fit: contain; position: relative; z-index: 1; }
+.intro__arc {
+    position: absolute; right: -8%; top: -12%;
+    width: 50vmin; height: 50vmin;
+    border: 6vmin solid var(--gold); border-radius: 50%;
+    border-right-color: transparent; border-bottom-color: transparent;
+    opacity: .16; transform: rotate(22deg); z-index: 0;
+}
+.intro__dot {
+    position: absolute; left: 10%; bottom: 10%;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--gold); box-shadow: 0 0 0 6px rgba(194,154,44,.18); z-index: 0;
+}
+.intro__caption {
+    position: relative; z-index: 1;
+    margin: var(--sp-5) 0 0;
+    font-size: var(--fs-300); font-weight: 600; letter-spacing: var(--tracking-wide);
+    text-transform: uppercase; color: var(--gold);
+}
+
 /* ---------- 20. Callouts ---------- */
 .callout {
     background: var(--paper-warm); border-left: 4px solid var(--gold);
@@ -650,7 +696,81 @@ address { font-style: normal; }
 
 .admin__filter select { padding: 6px 10px; border: 1px solid var(--line); border-radius: var(--radius); }
 
-/* ---------- 27. Visually-hidden utility ---------- */
+/* ---------- 27. Partnership CTA ---------- */
+.cta {
+    position: relative;
+    background: var(--paper);
+    color: var(--ink);
+    overflow: hidden;
+    padding-block: var(--sp-10);
+}
+.cta__bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.cta__glow {
+    position: absolute; left: 50%; top: 50%;
+    width: 70vmin; height: 70vmin;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(194,154,44,.42) 0%, rgba(194,154,44,0) 70%);
+    filter: blur(8px);
+    animation: ctaPulse 6s ease-in-out infinite;
+}
+.cta__ring {
+    position: absolute; left: 50%; top: 50%;
+    width: 62vmin; height: 62vmin;
+    border: 2px solid rgba(194,154,44,.28);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) rotate(22deg);
+}
+@keyframes ctaPulse {
+    0%, 100% { opacity: .5;  transform: translate(-50%, -50%) scale(1); }
+    50%      { opacity: .9;  transform: translate(-50%, -50%) scale(1.07); }
+}
+@media (prefers-reduced-motion: reduce) { .cta__glow { animation: none; } }
+
+.cta__inner {
+    position: relative; z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+    min-height: clamp(280px, 42vh, 460px);
+}
+.cta__card {
+    position: relative;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    width: 100%; max-width: 760px;
+    padding: var(--sp-8) var(--sp-6);
+    border-radius: var(--radius-lg);
+    background:
+        radial-gradient(120% 120% at 80% -10%, rgba(194,154,44,.22) 0%, transparent 55%),
+        radial-gradient(90% 90% at -12% 110%, rgba(35,31,32,.98) 0%, var(--ink) 60%);
+    color: var(--paper);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+}
+@media (min-width: 600px) { .cta__card { padding: var(--sp-10) var(--sp-8); } }
+.cta__card::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+        radial-gradient(circle at 18% 22%, rgba(255,255,255,.06) 0%, transparent 40%),
+        radial-gradient(circle at 82% 78%, rgba(194,154,44,.10) 0%, transparent 45%);
+    pointer-events: none;
+}
+.cta__eyebrow,
+.cta__title,
+.cta__lede,
+.cta__actions { position: relative; z-index: 1; }
+.cta__eyebrow {
+    font-size: var(--fs-300); font-weight: 600; letter-spacing: var(--tracking-wide);
+    text-transform: uppercase; color: var(--gold); margin-bottom: var(--sp-4);
+}
+.cta__title {
+    font-family: var(--font-display); font-size: clamp(1.5rem, 4vw, 2.6rem);
+    line-height: var(--lh-tight); margin-bottom: var(--sp-5); text-wrap: balance;
+}
+.cta__lede { font-size: var(--fs-500); color: rgba(255,255,255,.86); margin-bottom: var(--sp-7); max-width: 56ch; }
+@media (min-width: 600px) { .cta__lede { font-size: var(--fs-600); } }
+.cta__actions { display: flex; gap: var(--sp-3); justify-content: center; flex-wrap: wrap; }
+@media (min-width: 600px) { .cta__actions { gap: var(--sp-4); } }
+
+/* ---------- 28. Visually-hidden utility ---------- */
 .visually-hidden {
     position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
     overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;

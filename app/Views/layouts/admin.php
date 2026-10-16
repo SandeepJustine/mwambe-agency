@@ -17,6 +17,7 @@ $breadcrumbs = $breadcrumbs ?? [];
     <link rel="icon" type="image/png" href="<?= e(asset('assets/img/mwambe-logo.png')) ?>">
     <link rel="stylesheet" href="<?= e(asset('assets/css/app.css')) ?>">
     <link rel="stylesheet" href="<?= e(asset('assets/css/admin.css')) ?>">
+    <link rel="stylesheet" href="<?= e(asset('assets/css/admin-dashboard.css')) ?>">
 </head>
 <body class="admin">
 <div class="admin__shell" data-admin-shell>

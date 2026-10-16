@@ -20,6 +20,8 @@ return function (Mwambe\Core\Http\Router $router): void {
     // Specific public detail routes — MUST come before generic page catch-alls
     $router->get('/our-work/programmes',         [ProgrammeController::class, 'index']);
     $router->get('/our-work/programmes/{slug}',  [ProgrammeController::class, 'show']);
+    $router->get('/programmes',          [ProgrammeController::class, 'index']);
+    $router->get('/programmes/{slug}',   [ProgrammeController::class, 'show']);
 
     $router->get('/news',         [NewsController::class, 'index']);
     $router->get('/news/{slug}',  [NewsController::class, 'show']);
