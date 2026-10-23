@@ -1,3 +1,11 @@
+<?php
+$currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+$isCurrentPage = static function (string $path) use ($currentPath): bool {
+    return $path === '/'
+        ? $currentPath === '/'
+        : ($currentPath === $path || str_starts_with($currentPath, rtrim($path, '/') . '/'));
+};
+?>
 <header class="site-header" role="banner">
     <div class="container site-header__inner">
 
@@ -22,14 +30,14 @@
 
         <nav class="primary-nav" id="primary-nav" aria-label="Primary">
             <ul class="primary-nav__list">
-                <li><a href="/">Home</a></li>
-                <li><a href="/about">About Us</a></li>
-                <li><a href="/our-work">Our Work</a></li>
-                <li><a href="/sectors">Sectors</a></li>
-                <li><a href="/impact">Our Impact</a></li>
-                <li><a href="/news">News &amp; Activities</a></li>
-                <li><a href="/partner-with-us">Partner With Us</a></li>
-                <li><a href="/contact" class="btn btn--primary btn--sm">Contact</a></li>
+                <li><a href="/"<?= $isCurrentPage('/') ? ' aria-current="page"' : '' ?>>Home</a></li>
+                <li><a href="/about"<?= $isCurrentPage('/about') ? ' aria-current="page"' : '' ?>>About Us</a></li>
+                <li><a href="/our-work"<?= $isCurrentPage('/our-work') || str_starts_with($currentPath, '/programmes') ? ' aria-current="page"' : '' ?>>Our Work</a></li>
+                <li><a href="/sectors"<?= $isCurrentPage('/sectors') ? ' aria-current="page"' : '' ?>>Sectors</a></li>
+                <li><a href="/impact"<?= $isCurrentPage('/impact') ? ' aria-current="page"' : '' ?>>Our Impact</a></li>
+                <li><a href="/news"<?= $isCurrentPage('/news') || $isCurrentPage('/events') ? ' aria-current="page"' : '' ?>>News &amp; Activities</a></li>
+                <li><a href="/partner-with-us"<?= $isCurrentPage('/partner-with-us') ? ' aria-current="page"' : '' ?>>Partner With Us</a></li>
+                <li><a href="/contact" class="btn btn--primary btn--sm"<?= $isCurrentPage('/contact') ? ' aria-current="page"' : '' ?>>Contact</a></li>
             </ul>
         </nav>
     </div>

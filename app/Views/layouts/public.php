@@ -15,7 +15,9 @@ $title = $title ?? 'MWAMBE Agency';
     <link rel="preload" as="image" href="<?= e(asset('assets/img/mwambe-logo.png')) ?>">
     <link rel="stylesheet" href="<?= e(asset('assets/css/app.css')) ?>">
 </head>
-<body>
+<body class="public-site">
+
+<a class="skip-link" href="#main">Skip to content</a>
 
 <?php require BASE_PATH . '/app/Views/components/header.php'; ?>
 

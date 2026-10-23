@@ -95,20 +95,74 @@
     </div>
 </section>
 
+<!-- VERIFIED IMPACT -->
+<?php if (!empty($impactIndicators)): ?>
+<section class="home-impact section--alt" data-reveal aria-labelledby="home-impact-title">
+    <div class="container">
+        <div class="home-impact__header">
+            <p class="eyebrow">Our Impact</p>
+            <h2 class="home-impact__title" id="home-impact-title">Progress you can measure.</h2>
+        </div>
+        <div class="home-impact__grid">
+            <?php foreach ($impactIndicators as $ind): ?>
+                <article class="home-impact__item">
+                    <p class="home-impact__value">
+                        <?= e($ind['value']) ?><span><?= e($ind['unit'] ?? '') ?></span>
+                    </p>
+                    <h3 class="home-impact__label"><?= e($ind['label']) ?></h3>
+                    <?php if (!empty($ind['description'])): ?>
+                        <p class="home-impact__description"><?= e($ind['description']) ?></p>
+                    <?php endif; ?>
+                    <?php if (!empty($ind['reporting_period'])): ?>
+                        <p class="home-impact__period"><?= e($ind['reporting_period']) ?></p>
+                    <?php endif; ?>
+                </article>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
 <!-- ================= INTRO ================= -->
 <section class="section section--intro" data-reveal>
     <div class="container">
-        <div class="section__header">
-            <p class="eyebrow">Who We Are</p>
-            <h2 class="section__title">Access to an opportunity is only the beginning.</h2>
-            <p class="section__lede">
-                MWAMBE Agency is a young, Malawi-based organisation working to connect young people,
-                skilled professionals, SMEs, cooperatives and community groups to opportunities that
-                strengthen skills, livelihoods, enterprise development and community resilience.
-            </p>
+        <div class="intro-grid">
+            <div class="intro__copy">
+                <div class="section__header">
+                    <p class="eyebrow">Who We Are</p>
+                    <h2 class="section__title">Access to an opportunity is only the beginning.</h2>
+                    <p class="section__lede">
+                        MWAMBE Agency is a young, Malawi-based organisation working to connect young people,
+                        skilled professionals, SMEs, cooperatives and community groups to opportunities that
+                        strengthen skills, livelihoods, enterprise development and community resilience.
+                    </p>
+                </div>
+                <a class="intro__link" href="/about">Discover who we are <span aria-hidden="true">→</span></a>
+            </div>
+
+            <figure class="intro__visual" aria-label="People and communities at the heart of MWAMBE's work">
+                <div class="intro__collage">
+                    <img
+                        class="intro__image intro__image--main"
+                        src="<?= e(asset('uploads/2026/10/2369d12bad240e561d82423f.jpg')) ?>"
+                        alt="A group of smiling young people together outdoors"
+                        width="1000" height="667"
+                        loading="lazy" decoding="async">
+                    <img
+                        class="intro__image intro__image--detail"
+                        src="<?= e(asset('uploads/2026/10/b91a77336946cdc341d7eb4e.jpg')) ?>"
+                        alt="Community members gathered at a timber structure"
+                        width="1000" height="667"
+                        loading="lazy" decoding="async">
+                    <figcaption class="intro__caption">
+                        <span class="intro__caption-mark" aria-hidden="true">M</span>
+                        Rooted in Malawi. Building opportunity together.
+                    </figcaption>
+                </div>
+            </figure>
         </div>
 
-        <div class="grid grid--3">
+        <div class="grid grid--3 intro__cards">
             <article class="card" data-reveal>
                 <h3 class="card__title">Our Vision</h3>
                 <p>Build resilient communities where people, enterprises and community groups can access opportunities, develop practical capacity and create sustainable livelihoods.</p>
@@ -174,30 +228,6 @@
                     </p>
                     <h3 class="card__title"><a href="/programmes/<?= e($p['slug']) ?>"><?= e($p['title']) ?></a></h3>
                     <p><?= e($p['summary']) ?></p>
-                </article>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-<?php endif; ?>
-
-<!-- VERIFIED IMPACT -->
-<?php if (!empty($impactIndicators)): ?>
-<section class="section section--dark" data-reveal>
-    <div class="container">
-        <div class="section__header">
-            <p class="eyebrow eyebrow--gold">Our Impact</p>
-            <h2 class="section__title">Verified indicators.</h2>
-            <p class="section__lede">See how we are making impact in different sectors and communities.</p>
-        </div>
-        <div class="grid grid--3">
-            <?php foreach ($impactIndicators as $ind): ?>
-                <article class="stat-block">
-                    <p class="stat-block__value"><?= e($ind['value']) ?><span class="stat-block__unit"><?= e($ind['unit'] ?? '') ?></span></p>
-                    <p class="stat-block__label"><?= e($ind['label']) ?></p>
-                    <?php if (!empty($ind['description'])): ?>
-                        <p class="stat-block__desc"><?= e($ind['description']) ?></p>
-                    <?php endif; ?>
                 </article>
             <?php endforeach; ?>
         </div>

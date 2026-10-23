@@ -103,7 +103,9 @@ $archArc     = $contentMix['archived_pct']  / 100 * $donutCirc;
          ============================================================ -->
     <header class="dash__header">
         <div class="dash__title-block">
-            <h1 class="dash__title"></h1>
+            <p class="dash__eyebrow">MWAMBE CMS</p>
+            <h2 class="dash__title">Dashboard overview</h2>
+            <p class="dash__lede">A clear view of your content, activity and next steps.</p>
         </div>
         <div class="dash__tools">
             <form class="dash__search" method="get" action="/admin/search" role="search">
@@ -202,8 +204,8 @@ $archArc     = $contentMix['archived_pct']  / 100 * $donutCirc;
                      aria-label="Enquiries over the last <?= count($enquiriesByWeek) ?> weeks">
                     <defs>
                         <linearGradient id="dashAreaGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%"   stop-color="#4318FF" stop-opacity="0.35"/>
-                            <stop offset="100%" stop-color="#4318FF" stop-opacity="0"/>
+                            <stop offset="0%"   stop-color="#C29A2C" stop-opacity="0.32"/>
+                            <stop offset="100%" stop-color="#C29A2C" stop-opacity="0"/>
                         </linearGradient>
                     </defs>
 
@@ -319,14 +321,13 @@ $archArc     = $contentMix['archived_pct']  / 100 * $donutCirc;
                 <div class="donut" role="img" aria-label="Content mix by workflow status">
                     <svg viewBox="0 0 200 200">
                         <!-- Track circle (background ring) -->
-                        <circle cx="100" cy="100" r="<?= $donutRadius ?>"
-                                fill="none" stroke="#EEF2FB" stroke-width="<?= $donutStroke ?>"/>
+                        <circle class="donut__track" cx="100" cy="100" r="<?= $donutRadius ?>"
+                                fill="none" stroke-width="<?= $donutStroke ?>"/>
 
                         <!-- Published arc (starts at top, clockwise) -->
                         <?php if ($contentMix['published_pct'] > 0): ?>
-                            <circle cx="100" cy="100" r="<?= $donutRadius ?>"
+                            <circle class="donut__segment--published" cx="100" cy="100" r="<?= $donutRadius ?>"
                                     fill="none"
-                                    stroke="#4318FF"
                                     stroke-width="<?= $donutStroke ?>"
                                     stroke-dasharray="<?= round($pubArc, 2) ?> <?= round($donutCirc - $pubArc, 2) ?>"
                                     stroke-dashoffset="0"
@@ -335,9 +336,8 @@ $archArc     = $contentMix['archived_pct']  / 100 * $donutCirc;
 
                         <!-- Draft arc (offset after published) -->
                         <?php if ($contentMix['draft_pct'] > 0): ?>
-                            <circle cx="100" cy="100" r="<?= $donutRadius ?>"
+                            <circle class="donut__segment--draft" cx="100" cy="100" r="<?= $donutRadius ?>"
                                     fill="none"
-                                    stroke="#39B8FF"
                                     stroke-width="<?= $donutStroke ?>"
                                     stroke-dasharray="<?= round($draftArc, 2) ?> <?= round($donutCirc - $draftArc, 2) ?>"
                                     stroke-dashoffset="<?= -round($pubArc, 2) ?>"
@@ -346,9 +346,8 @@ $archArc     = $contentMix['archived_pct']  / 100 * $donutCirc;
 
                         <!-- Archived arc -->
                         <?php if ($contentMix['archived_pct'] > 0): ?>
-                            <circle cx="100" cy="100" r="<?= $donutRadius ?>"
+                            <circle class="donut__segment--archived" cx="100" cy="100" r="<?= $donutRadius ?>"
                                     fill="none"
-                                    stroke="#A3AED0"
                                     stroke-width="<?= $donutStroke ?>"
                                     stroke-dasharray="<?= round($archArc, 2) ?> <?= round($donutCirc - $archArc, 2) ?>"
                                     stroke-dashoffset="<?= -round($pubArc + $draftArc, 2) ?>"
@@ -363,17 +362,17 @@ $archArc     = $contentMix['archived_pct']  / 100 * $donutCirc;
 
                 <div class="donut__legend">
                     <div class="donut__legend-item">
-                        <span class="donut__swatch" style="background:#4318FF"></span>
+                        <span class="donut__swatch donut__swatch--published"></span>
                         <span class="donut__legend-label">Published</span>
                         <span class="donut__legend-value"><?= (int) $contentMix['published'] ?></span>
                     </div>
                     <div class="donut__legend-item">
-                        <span class="donut__swatch" style="background:#39B8FF"></span>
+                        <span class="donut__swatch donut__swatch--draft"></span>
                         <span class="donut__legend-label">Draft</span>
                         <span class="donut__legend-value"><?= (int) $contentMix['draft'] ?></span>
                     </div>
                     <div class="donut__legend-item">
-                        <span class="donut__swatch" style="background:#A3AED0"></span>
+                        <span class="donut__swatch donut__swatch--archived"></span>
                         <span class="donut__legend-label">Archived</span>
                         <span class="donut__legend-value"><?= (int) $contentMix['archived'] ?></span>
                     </div>
@@ -396,32 +395,34 @@ $archArc     = $contentMix['archived_pct']  / 100 * $donutCirc;
             <?php if (empty($recentContent)): ?>
                 <p class="admin__empty" style="margin:0">Nothing published yet.</p>
             <?php else: ?>
-                <table class="dtable">
-                    <thead>
-                        <tr>
-                            <th scope="col">Title</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Updated</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($recentContent as $c): ?>
+                <div class="dtable-wrap" role="region" aria-label="Recent content" tabindex="0">
+                    <table class="dtable">
+                        <thead>
                             <tr>
-                                <td><a href="<?= e($c['url']) ?>"><?= e($c['title']) ?></a></td>
-                                <td style="text-transform:capitalize;color:var(--dash-muted)"><?= e($c['type']) ?></td>
-                                <td>
-                                    <span class="<?= e($pillClass($c['status'])) ?>">
-                                        <?= e($statusLabel($c['status'])) ?>
-                                    </span>
-                                </td>
-                                <td style="color:var(--dash-muted)">
-                                    <?= e(date('d M Y', strtotime($c['updated_at']))) ?>
-                                </td>
+                                <th scope="col">Title</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Updated</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($recentContent as $c): ?>
+                                <tr>
+                                    <td><a href="<?= e($c['url']) ?>"><?= e($c['title']) ?></a></td>
+                                    <td style="text-transform:capitalize;color:var(--dash-muted)"><?= e($c['type']) ?></td>
+                                    <td>
+                                        <span class="<?= e($pillClass($c['status'])) ?>">
+                                            <?= e($statusLabel($c['status'])) ?>
+                                        </span>
+                                    </td>
+                                    <td style="color:var(--dash-muted)">
+                                        <?= e(date('d M Y', strtotime($c['updated_at']))) ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php endif; ?>
         </div>
 
@@ -434,34 +435,36 @@ $archArc     = $contentMix['archived_pct']  / 100 * $donutCirc;
             <?php if (empty($recentEnquiries)): ?>
                 <p class="admin__empty" style="margin:0">No enquiries yet.</p>
             <?php else: ?>
-                <table class="dtable">
-                    <thead>
-                        <tr>
-                            <th scope="col">From</th>
-                            <th scope="col">Topic</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($recentEnquiries as $e): ?>
+                <div class="dtable-wrap" role="region" aria-label="Recent enquiries" tabindex="0">
+                    <table class="dtable">
+                        <thead>
                             <tr>
-                                <td>
-                                    <a href="<?= e($e['url']) ?>"><?= e($e['sender']) ?></a>
-                                    <br>
-                                    <small style="color:var(--dash-muted)"><code><?= e($e['reference']) ?></code></small>
-                                </td>
-                                <td style="color:var(--dash-muted)">
-                                    <?= e(mb_strimwidth((string) ($e['topic'] ?: '—'), 0, 30, '…')) ?>
-                                </td>
-                                <td>
-                                    <span class="<?= e($pillClass($e['status'])) ?>">
-                                        <?= e($statusLabel($e['status'])) ?>
-                                    </span>
-                                </td>
+                                <th scope="col">From</th>
+                                <th scope="col">Topic</th>
+                                <th scope="col">Status</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($recentEnquiries as $e): ?>
+                                <tr>
+                                    <td>
+                                        <a href="<?= e($e['url']) ?>"><?= e($e['sender']) ?></a>
+                                        <br>
+                                        <small style="color:var(--dash-muted)"><code><?= e($e['reference']) ?></code></small>
+                                    </td>
+                                    <td style="color:var(--dash-muted)">
+                                        <?= e(mb_strimwidth((string) ($e['topic'] ?: '—'), 0, 30, '…')) ?>
+                                    </td>
+                                    <td>
+                                        <span class="<?= e($pillClass($e['status'])) ?>">
+                                            <?= e($statusLabel($e['status'])) ?>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php endif; ?>
         </div>
     </section>

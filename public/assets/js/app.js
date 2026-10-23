@@ -108,6 +108,7 @@
     function initReveal() {
         var els = document.querySelectorAll('[data-reveal]');
         if (!els.length) return;
+        document.body.classList.add('has-reveal');
         if (prefersReducedMotion || !('IntersectionObserver' in window)) {
             els.forEach(function (el) { el.classList.add('is-revealed'); });
             return;
