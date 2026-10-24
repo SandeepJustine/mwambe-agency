@@ -15,6 +15,10 @@ $isCurrentPage = static function (string $path) use ($currentPath): bool {
                 alt="MWAMBE Agency — Your trusted partner"
                 class="brand__logo"
                 width="180" height="180">
+            <span class="brand__lockup" aria-hidden="true">
+                <span class="brand__name">MWAMBE</span>
+                <span class="brand__descriptor">Agency</span>
+            </span>
         </a>
 
         <button

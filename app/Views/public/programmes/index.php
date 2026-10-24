@@ -1,4 +1,11 @@
 <section class="page-hero page-hero--split">
+    <div class="page-hero__bg" aria-hidden="true">
+        <img
+            src="<?= e(asset('uploads/2026/10/2369d12bad240e561d82423f.jpg')) ?>"
+            alt=""
+            width="1000" height="667"
+            fetchpriority="high">
+    </div>
     <div class="container page-hero__inner">
         <p class="page-hero__eyebrow">Programmes &amp; Projects</p>
         <h1 class="page-hero__headline">Structured work with defined outcomes.</h1>

@@ -17,6 +17,7 @@ use Mwambe\Controllers\Admin\ProfileController;
 use Mwambe\Controllers\Admin\ProgrammeController;
 use Mwambe\Controllers\Admin\SectorController;
 use Mwambe\Controllers\Admin\ServiceController;
+use Mwambe\Controllers\Admin\TeamController;
 use Mwambe\Controllers\Admin\UserController;
 use Mwambe\Core\Http\Middleware\AuthMiddleware;
 use Mwambe\Core\Http\Middleware\CsrfMiddleware;
@@ -77,11 +78,20 @@ return function (Mwambe\Core\Http\Router $router): void {
 
     // Sectors
     $router->get('/admin/sectors',                 [SectorController::class, 'index'],  $editors);
+    $router->post('/admin/sectors/page-section',   [SectorController::class, 'updatePageSection'], $editors);
     $router->get('/admin/sectors/new',             [SectorController::class, 'create'], $editors);
     $router->post('/admin/sectors',                [SectorController::class, 'store'],  $editors);
     $router->get('/admin/sectors/{id}/edit',       [SectorController::class, 'edit'],   $editors);
     $router->post('/admin/sectors/{id}/edit',      [SectorController::class, 'update'], $editors);
     $router->post('/admin/sectors/{id}/delete',    [SectorController::class, 'delete'], $editors);
+
+    // Team members
+    $router->get('/admin/team',                 [TeamController::class, 'index'],  $editors);
+    $router->get('/admin/team/new',             [TeamController::class, 'create'], $editors);
+    $router->post('/admin/team',                [TeamController::class, 'store'],  $editors);
+    $router->get('/admin/team/{id}/edit',       [TeamController::class, 'edit'],   $editors);
+    $router->post('/admin/team/{id}/edit',      [TeamController::class, 'update'], $editors);
+    $router->post('/admin/team/{id}/delete',    [TeamController::class, 'delete'], $editors);
 
     // Services
     $router->get('/admin/services',                [ServiceController::class, 'index'],  $editors);

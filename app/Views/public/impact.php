@@ -1,14 +1,4 @@
-<section class="page-hero page-hero--editorial">
-    <div class="container page-hero__inner">
-        <p class="page-hero__eyebrow">Evidence</p>
-        <h1 class="page-hero__headline">Evidence over activity.</h1>
-        <p class="page-hero__lede">
-            MWAMBE is committed to moving beyond activity-based reporting toward stronger evidence of results.
-            Only verified impact figures are shown here.
-        </p>
-    </div>
-</section>
-
+<!-- Verified impact indicators -->
 <?php if (empty($indicators)): ?>
     <section class="section" data-reveal>
         <div class="container container--narrow">
@@ -23,11 +13,27 @@
         </div>
     </section>
 <?php else: ?>
-    <section class="section" data-reveal>
+    <section class="section impact-results" data-reveal>
         <div class="container">
-            <div class="grid grid--3">
+            <header class="section__header">
+                <p class="eyebrow">Verified results</p>
+                <h2 class="section__title">Progress you can measure.</h2>
+                <p class="section__lede">These figures have been reviewed and approved for publication.</p>
+            </header>
+            <div class="grid grid--3 impact-results__grid">
                 <?php foreach ($indicators as $ind): ?>
-                    <article class="stat-block stat-block--dark">
+                    <?php
+                    $indicatorLabel = strtolower((string) ($ind['label'] ?? ''));
+                    $indicatorIcon = str_contains($indicatorLabel, 'young') || str_contains($indicatorLabel, 'youth')
+                        ? 'icon-youth'
+                        : (str_contains($indicatorLabel, 'sme') || str_contains($indicatorLabel, 'enterprise')
+                            ? 'icon-enterprise'
+                            : 'icon-community');
+                    ?>
+                    <article class="stat-block stat-block--impact">
+                        <span class="stat-block__icon" aria-hidden="true">
+                            <svg><use href="#<?= e($indicatorIcon) ?>"></use></svg>
+                        </span>
                         <p class="stat-block__value"><?= e($ind['value']) ?><span class="stat-block__unit"><?= e($ind['unit'] ?? '') ?></span></p>
                         <p class="stat-block__label"><?= e($ind['label']) ?></p>
                         <?php if (!empty($ind['description'])): ?>
@@ -42,3 +48,53 @@
         </div>
     </section>
 <?php endif; ?>
+
+<section class="section section--alt impact-stories" data-reveal aria-labelledby="impact-stories-title">
+    <div class="container">
+        <header class="section__header">
+            <p class="eyebrow">People &amp; progress</p>
+            <h2 class="section__title" id="impact-stories-title">Impact stories.</h2>
+            <p class="section__lede">Experiences and outcomes from the people, enterprises and communities connected to our work.</p>
+        </header>
+
+        <?php if (empty($impactStories)): ?>
+            <div class="callout callout--info">
+                <h3 class="callout__title">Impact stories are on the way.</h3>
+                <p>Stories will appear here when they are published in the <strong>Impact Story</strong> category.</p>
+            </div>
+        <?php else: ?>
+            <div class="grid grid--3">
+                <?php foreach ($impactStories as $story): ?>
+                    <article class="card card--article" data-reveal>
+                        <?php if (!empty($story['media_filename'])): ?>
+                            <img
+                                src="<?= e(asset('uploads/' . $story['media_filename'])) ?>"
+                                alt="<?= e($story['media_alt'] ?? '') ?>"
+                                class="card__image"
+                                loading="lazy"
+                                decoding="async">
+                        <?php endif; ?>
+                        <p class="card__meta">
+                            Impact Story
+                            <?php if (!empty($story['published_at'])): ?>
+                                · <time datetime="<?= e($story['published_at']) ?>"><?= e(date('d M Y', strtotime($story['published_at']))) ?></time>
+                            <?php endif; ?>
+                        </p>
+                        <h3 class="card__title">
+                            <a href="/news/<?= e($story['slug']) ?>"><?= e($story['title']) ?></a>
+                        </h3>
+                        <?php if (!empty($story['excerpt'])): ?>
+                            <p><?= e($story['excerpt']) ?></p>
+                        <?php endif; ?>
+                        <a class="impact-story__link" href="/news/<?= e($story['slug']) ?>">
+                            Read story <span aria-hidden="true">→</span>
+                        </a>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+            <p class="section__actions">
+                <a class="btn btn--primary" href="/news?category=impact-story">More impact stories</a>
+            </p>
+        <?php endif; ?>
+    </div>
+</section>

@@ -23,10 +23,12 @@ final class NewsController
         $page = max(1, (int) ($request->query['page'] ?? 1));
         $category = $request->string('category');
         $category = $category !== '' ? $category : null;
+        $search = mb_substr($request->string('q'), 0, 100);
+        $search = $search !== '' ? $search : null;
         $offset = ($page - 1) * self::PER_PAGE;
 
-        $articles = $this->news->published(self::PER_PAGE, $offset, $category);
-        $total = $this->news->countPublished($category);
+        $articles = $this->news->published(self::PER_PAGE, $offset, $category, $search);
+        $total = $this->news->countPublished($category, $search);
 
         return $this->render('public/news/index', [
             'title'    => 'News & Activities | MWAMBE Agency',
@@ -35,6 +37,8 @@ final class NewsController
             'perPage'  => self::PER_PAGE,
             'total'    => $total,
             'category' => $category,
+            'search'   => $search,
+            'categories' => $this->news->publicCategories(),
         ]);
     }
 

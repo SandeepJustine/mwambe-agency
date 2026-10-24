@@ -1,4 +1,11 @@
 <section class="page-hero page-hero--minimal">
+    <div class="page-hero__bg" aria-hidden="true">
+        <img
+            src="<?= e(asset('uploads/2026/10/2369d12bad240e561d82423f.jpg')) ?>"
+            alt=""
+            width="1000" height="667"
+            fetchpriority="high">
+    </div>
     <div class="container page-hero__inner">
         <p class="page-hero__eyebrow">Contact</p>
         <h1 class="page-hero__headline">Let's talk.</h1>
@@ -8,8 +15,8 @@
     </div>
 </section>
 
-<section class="section">
-    <div class="container container--narrow">
+<section class="section contact-page">
+    <div class="container">
 
         <?php if (!empty($success)): ?>
             <div class="alert alert--success" role="status"><?= e($success) ?></div>
@@ -20,18 +27,35 @@
         <?php endif; ?>
 
         <div class="contact-grid">
-            <div class="contact-grid__info">
-                <h2 class="section__title">MWAMBE Agency</h2>
+            <aside class="contact-grid__info" aria-labelledby="contact-info-title">
+                <p class="eyebrow">Reach out directly</p>
+                <h2 class="section__title" id="contact-info-title">We’re here to connect.</h2>
+                <p class="contact-grid__intro">Choose the channel that works best for you, or send a message and our team will be in touch.</p>
                 <address>
-                    <p>Lilongwe, Malawi</p>
-                    <p>Email: <a href="mailto:mwambeagency@gmail.com">mwambeagency@gmail.com</a></p>
-                    <p>Telephone: <a href="tel:+265995111156">+265 995 111 156</a><br>
-                       <a href="tel:+265882315575">+265 882 315 575</a></p>
+                    <p class="contact-detail">
+                        <span class="contact-detail__icon"><svg class="contact-icon" aria-hidden="true"><use href="#icon-pin"></use></svg></span>
+                        <span><strong>Visit</strong><br>Lilongwe, Malawi</span>
+                    </p>
+                    <p class="contact-detail">
+                        <span class="contact-detail__icon"><svg class="contact-icon" aria-hidden="true"><use href="#icon-envelope"></use></svg></span>
+                        <span><strong>Email</strong><br><a href="mailto:mwambeagency@gmail.com">mwambeagency@gmail.com</a></span>
+                    </p>
+                    <p class="contact-detail">
+                        <span class="contact-detail__icon"><svg class="contact-icon" aria-hidden="true"><use href="#icon-phone"></use></svg></span>
+                        <span><strong>Call</strong><br><a href="tel:+265995111156">+265 995 111 156</a><br>
+                        <a href="tel:+265882315575">+265 882 315 575</a></span>
+                    </p>
                 </address>
-            </div>
+                <a class="contact-grid__link" href="/partner-with-us">Interested in partnering? <span aria-hidden="true">→</span></a>
+            </aside>
 
-            <form method="post" action="/contact" class="form" novalidate>
+            <form method="post" action="/contact" class="form contact-form" novalidate aria-labelledby="contact-form-title">
                 <?= $csrf->field() ?>
+                <header class="enquiry-form__header">
+                    <p class="eyebrow">Send a message</p>
+                    <h2 id="contact-form-title">How can we help?</h2>
+                    <p>Fields marked <span class="form__required">*</span> are required.</p>
+                </header>
 
                 <!-- honeypot -->
                 <div class="form__honeypot" aria-hidden="true" style="position:absolute;left:-9999px">
@@ -83,6 +107,29 @@
 
                 <button type="submit" class="btn btn--primary">Send message</button>
             </form>
+        </div>
+    </div>
+</section>
+
+<section class="section section--alt contact-map" aria-labelledby="contact-map-title">
+    <div class="container">
+        <div class="contact-map__header">
+            <div>
+                <p class="eyebrow">Find us</p>
+                <h2 class="section__title" id="contact-map-title">Based in Lilongwe, Malawi.</h2>
+                <p class="section__lede">Get directions to MWAMBE Agency in Lilongwe.</p>
+            </div>
+            <a class="btn btn--primary" href="https://www.google.com/maps/search/?api=1&amp;query=Lilongwe%2C%20Malawi" target="_blank" rel="noopener noreferrer">
+                Open map <span aria-hidden="true">↗</span>
+            </a>
+        </div>
+        <div class="contact-map__frame">
+            <iframe
+                src="https://maps.google.com/maps?q=Lilongwe%2C%20Malawi&amp;output=embed"
+                title="Map showing Lilongwe, Malawi"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                allowfullscreen></iframe>
         </div>
     </div>
 </section>

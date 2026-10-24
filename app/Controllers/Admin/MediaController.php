@@ -61,6 +61,7 @@ final class MediaController
             $refs += (int) $this->db->selectOne('SELECT COUNT(*) AS c FROM services WHERE media_id = ?', [(int) $m['id']])['c'];
             $refs += (int) $this->db->selectOne('SELECT COUNT(*) AS c FROM news_articles WHERE media_id = ?', [(int) $m['id']])['c'];
             $refs += (int) $this->db->selectOne('SELECT COUNT(*) AS c FROM events WHERE media_id = ?', [(int) $m['id']])['c'];
+            $refs += (int) $this->db->selectOne('SELECT COUNT(*) AS c FROM team_members WHERE media_id = ?', [(int) $m['id']])['c'];
             $m['reference_count'] = $refs;
         }
         unset($m);
@@ -139,6 +140,7 @@ final class MediaController
             ['services', 'media_id'],
             ['news_articles', 'media_id'],
             ['events', 'media_id'],
+            ['team_members', 'media_id'],
         ];
         foreach ($tables as [$table, $column]) {
             $refs += (int) $this->db->selectOne(

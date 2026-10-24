@@ -26,10 +26,13 @@ $breadcrumbs = $breadcrumbs ?? [];
     <aside class="admin__sidebar" id="admin-sidebar" aria-label="Admin navigation">
         <div class="admin__sidebar-brand">
             <img src="<?= e(asset('assets/img/mwambe-logo.png')) ?>" alt="MWAMBE Agency" width="120" height="120">
-            <span class="admin__sidebar-brand-text">CMS</span>
+            <span class="admin__sidebar-brand-copy">
+                <span class="admin__sidebar-brand-text">MWAMBE Agency</span>
+                <span class="admin__sidebar-brand-tag">Content management</span>
+            </span>
         </div>
 
-        <nav class="admin__nav">
+        <nav class="admin__nav" aria-label="CMS sections">
             <p class="admin__nav-group">Overview</p>
             <a href="/admin" class="admin__nav-link<?= $activeNav === 'dashboard' ? ' is-active' : '' ?>">Dashboard</a>
 
@@ -37,6 +40,7 @@ $breadcrumbs = $breadcrumbs ?? [];
             <a href="/admin/homepage/slides" class="admin__nav-link<?= $activeNav === 'slides' ? ' is-active' : '' ?>">Hero Slider</a>
             <a href="/admin/services"        class="admin__nav-link<?= $activeNav === 'services' ? ' is-active' : '' ?>">Services</a>
             <a href="/admin/sectors"         class="admin__nav-link<?= $activeNav === 'sectors' ? ' is-active' : '' ?>">Sectors</a>
+            <a href="/admin/team"            class="admin__nav-link<?= $activeNav === 'team' ? ' is-active' : '' ?>">Our Team</a>
             <a href="/admin/media"           class="admin__nav-link<?= $activeNav === 'media' ? ' is-active' : '' ?>">Media Library</a>
             <a href="/admin/documents"       class="admin__nav-link<?= $activeNav === 'documents' ? ' is-active' : '' ?>">Documents</a>
 

@@ -46,7 +46,7 @@
                             <p class="hero-slide__eyebrow"><?= e($slide['eyebrow']) ?></p>
                         <?php endif; ?>
 
-                        <h1 class="hero-slide__headline"><?= e($slide['headline']) ?></h1>
+                        <h3 class="hero-slide__headline"><?= e($slide['headline']) ?></h3>
 
                         <p class="hero-slide__supporting"><?= e($slide['supporting']) ?></p>
 
@@ -99,10 +99,10 @@
 <?php if (!empty($impactIndicators)): ?>
 <section class="home-impact section--alt" data-reveal aria-labelledby="home-impact-title">
     <div class="container">
-        <div class="home-impact__header">
+        <!--<div class="home-impact__header">
             <p class="eyebrow">Our Impact</p>
             <h2 class="home-impact__title" id="home-impact-title">Progress you can measure.</h2>
-        </div>
+        </div>-->
         <div class="home-impact__grid">
             <?php foreach ($impactIndicators as $ind): ?>
                 <article class="home-impact__item">
@@ -155,26 +155,11 @@
                         width="1000" height="667"
                         loading="lazy" decoding="async">
                     <figcaption class="intro__caption">
-                        <span class="intro__caption-mark" aria-hidden="true">M</span>
+                        <svg class="intro__caption-icon" aria-hidden="true"><use href="#icon-pin"></use></svg>
                         Rooted in Malawi. Building opportunity together.
                     </figcaption>
                 </div>
             </figure>
-        </div>
-
-        <div class="grid grid--3 intro__cards">
-            <article class="card" data-reveal>
-                <h3 class="card__title">Our Vision</h3>
-                <p>Build resilient communities where people, enterprises and community groups can access opportunities, develop practical capacity and create sustainable livelihoods.</p>
-            </article>
-            <article class="card" data-reveal>
-                <h3 class="card__title">Our Mission</h3>
-                <p>Connect skilled people, SMEs, cooperatives and community groups to opportunities, partnerships and practical capacity-building initiatives.</p>
-            </article>
-            <article class="card" data-reveal>
-                <h3 class="card__title">Our Approach</h3>
-                <p>Identify &rarr; Build Capacity &rarr; Connect &rarr; Support Action &rarr; Document Results. We prepare people to compete, participate and create value.</p>
-            </article>
         </div>
     </div>
 </section>
@@ -189,22 +174,22 @@
 
         <div class="grid grid--2">
             <article class="feature" data-reveal>
-                <span class="feature__mark" aria-hidden="true"></span>
+                <svg class="feature__icon" aria-hidden="true"><use href="#icon-youth"></use></svg>
                 <h3 class="feature__title">Youth &amp; Professional Development</h3>
                 <p>Career coaching, CV and professional positioning, personal branding, employability workshops, mentorship and networking.</p>
             </article>
             <article class="feature" data-reveal>
-                <span class="feature__mark" aria-hidden="true"></span>
+                <svg class="feature__icon" aria-hidden="true"><use href="#icon-enterprise"></use></svg>
                 <h3 class="feature__title">Entrepreneurship &amp; SME Development</h3>
                 <p>Business development, registration guidance, marketing and brand development, digital marketing, research and proposal development.</p>
             </article>
             <article class="feature" data-reveal>
-                <span class="feature__mark" aria-hidden="true"></span>
+                <svg class="feature__icon" aria-hidden="true"><use href="#icon-agriculture"></use></svg>
                 <h3 class="feature__title">Agriculture &amp; Agribusiness</h3>
                 <p>Agribusiness development, agricultural entrepreneurship, youth participation in agriculture, research and climate-resilient livelihoods.</p>
             </article>
             <article class="feature" data-reveal>
-                <span class="feature__mark" aria-hidden="true"></span>
+                <svg class="feature__icon" aria-hidden="true"><use href="#icon-community"></use></svg>
                 <h3 class="feature__title">Project &amp; Community Development</h3>
                 <p>Project planning, community engagement, field operations, research and data collection, reporting and partnership coordination.</p>
             </article>

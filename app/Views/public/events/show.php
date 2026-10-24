@@ -1,5 +1,12 @@
 <article>
     <header class="page-hero page-hero--editorial">
+        <div class="page-hero__bg" aria-hidden="true">
+        <img
+            src="<?= e(asset('uploads/2026/10/2369d12bad240e561d82423f.jpg')) ?>"
+            alt=""
+            width="1000" height="667"
+            fetchpriority="high">
+    </div>
         <div class="container page-hero__inner">
             <p class="page-hero__eyebrow">Event</p>
             <h1 class="page-hero__headline"><?= e($event['title']) ?></h1>

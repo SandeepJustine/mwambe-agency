@@ -1,4 +1,11 @@
 <section class="page-hero page-hero--minimal">
+    <div class="page-hero__bg" aria-hidden="true">
+        <img
+            src="<?= e(asset('uploads/2026/10/2369d12bad240e561d82423f.jpg')) ?>"
+            alt=""
+            width="1000" height="667"
+            fetchpriority="high">
+    </div>
     <div class="container page-hero__inner">
         <p class="page-hero__eyebrow">Partner With Us</p>
         <h1 class="page-hero__headline">Start a conversation.</h1>
@@ -9,8 +16,8 @@
     </div>
 </section>
 
-<section class="section">
-    <div class="container container--narrow">
+<section class="section partner-page">
+    <div class="container">
 
         <?php if (!empty($success)): ?>
             <div class="alert alert--success" role="status"><?= e($success) ?></div>
@@ -20,8 +27,28 @@
             <div class="alert alert--error" role="alert"><?= e($errors['_form']) ?></div>
         <?php endif; ?>
 
-        <form method="post" action="/partner-with-us" class="form" novalidate>
+        <div class="partner-layout">
+            <aside class="partner-aside" aria-labelledby="partner-aside-title">
+                <div class="partner-aside__icon" aria-hidden="true">
+                    <svg><use href="#icon-collaboration"></use></svg>
+                </div>
+                <p class="eyebrow">Let’s build together</p>
+                <h2 id="partner-aside-title">Good work starts with a shared purpose.</h2>
+                <p>Tell us what your organisation does, who you hope to reach, and the collaboration you have in mind. We’ll use your note to start a focused conversation.</p>
+                <div class="partner-aside__prompt">
+                    <span>Have a question first?</span>
+                    <a href="mailto:mwambeagency@gmail.com">mwambeagency@gmail.com</a>
+                    <a href="tel:+265995111156">+265 995 111 156</a>
+                </div>
+            </aside>
+
+        <form method="post" action="/partner-with-us" class="form partner-form" novalidate aria-labelledby="partner-form-title">
             <?= $csrf->field() ?>
+            <header class="enquiry-form__header">
+                <p class="eyebrow">Partnership enquiry</p>
+                <h2 id="partner-form-title">Tell us about your idea.</h2>
+                <p>Fields marked <span class="form__required">*</span> are required.</p>
+            </header>
 
             <div class="form__honeypot" aria-hidden="true" style="position:absolute;left:-9999px">
                 <label for="website">Website (leave empty)</label>
@@ -94,5 +121,6 @@
 
             <button type="submit" class="btn btn--primary">Send partnership enquiry</button>
         </form>
+        </div>
     </div>
 </section>

@@ -80,6 +80,10 @@
                 </div>
             <?php endif; ?>
             <input type="file" id="image" name="image" class="form__input" accept="image/jpeg,image/png,image/webp">
+            <?php if (isset($errors['image'])): ?><p class="form__error"><?= e($errors['image']) ?></p><?php endif; ?>
+            <label for="image_alt" class="form__label">Image description</label>
+            <input type="text" id="image_alt" name="image_alt" class="form__input"
+                   value="<?= e($sector['media_alt'] ?? '') ?>" maxlength="250">
         </div>
     </fieldset>
 

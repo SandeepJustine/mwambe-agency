@@ -15,6 +15,8 @@ use Mwambe\Services\MediaUploader;
 
 final class SectorController
 {
+    private ?string $uploadError = null;
+
     public function __construct(
         private readonly Auth $auth,
         private readonly Csrf $csrf,
@@ -32,6 +34,21 @@ final class SectorController
             LEFT JOIN media m ON m.id = s.media_id
             ORDER BY s.position ASC, s.name ASC
         ");
+        $pageSection = $this->db->selectOne("
+            SELECT s.*
+            FROM pages p
+            LEFT JOIN page_sections s
+                ON s.page_id = p.id AND s.section_type = 'rich_text'
+            WHERE p.slug = 'sectors'
+            ORDER BY s.position ASC
+            LIMIT 1
+        ");
+        if ($pageSection !== null) {
+            $sectionData = $pageSection['data'] ? json_decode((string) $pageSection['data'], true) : [];
+            $pageSection['cta_label'] = is_array($sectionData) ? ($sectionData['cta_label'] ?? 'Explore a partnership') : 'Explore a partnership';
+            $pageSection['cta_url'] = is_array($sectionData) ? ($sectionData['cta_url'] ?? '/contact') : '/contact';
+        }
+
         return $this->render('admin/sectors/index', [
             'title'       => 'Sectors',
             'activeNav'   => 'sectors',
@@ -40,8 +57,83 @@ final class SectorController
                 ['label' => 'Sectors'],
             ],
             'sectors' => $sectors,
+            'pageSection' => $pageSection,
             'flash'   => $this->popFlash(),
         ]);
+    }
+
+    public function updatePageSection(Request $request): Response
+    {
+        $page = $this->db->selectOne("SELECT id FROM pages WHERE slug = 'sectors' LIMIT 1");
+        if ($page === null) {
+            return Response::html('<h1>404</h1>', 404);
+        }
+
+        $data = [
+            'eyebrow' => $request->string('section_eyebrow'),
+            'heading' => $request->string('section_heading'),
+            'body' => $request->string('section_body'),
+            'cta_label' => $request->string('cta_label'),
+            'cta_url' => $request->string('cta_url'),
+            'is_visible' => (int) (bool) $request->input('section_visible'),
+        ];
+        $errors = [];
+        if ($data['cta_label'] !== '' && $data['cta_url'] === '') {
+            $errors[] = 'Enter a destination for the section button.';
+        } elseif ($data['cta_url'] !== '' && !preg_match('#^(?:/(?!/)|https?://)#i', $data['cta_url'])) {
+            $errors[] = 'The button destination must be a site path or an http(s) URL.';
+        }
+        if (mb_strlen($data['eyebrow']) > 120 || mb_strlen($data['heading']) > 190 || mb_strlen($data['cta_label']) > 80 || mb_strlen($data['cta_url']) > 500) {
+            $errors[] = 'One or more fields exceed their maximum length.';
+        }
+
+        $section = $this->db->selectOne("
+            SELECT id FROM page_sections
+            WHERE page_id = ? AND section_type = 'rich_text'
+            ORDER BY position ASC
+            LIMIT 1
+        ", [(int) $page['id']]);
+        $sectionData = json_encode([
+            'cta_label' => $data['cta_label'],
+            'cta_url' => $data['cta_url'],
+        ], JSON_UNESCAPED_SLASHES);
+
+        if ($errors) {
+            $this->flash(implode(' ', $errors));
+            return Response::redirect('/admin/sectors');
+        }
+
+        if ($section !== null) {
+            $this->db->execute("
+                UPDATE page_sections
+                SET eyebrow = ?, heading = ?, body = ?, data = ?, is_visible = ?
+                WHERE id = ?
+            ", [
+                $data['eyebrow'] ?: null,
+                $data['heading'] ?: null,
+                $data['body'] ?: null,
+                $sectionData,
+                $data['is_visible'],
+                (int) $section['id'],
+            ]);
+            $sectionId = (int) $section['id'];
+        } else {
+            $sectionId = $this->db->insert("
+                INSERT INTO page_sections (page_id, position, section_type, eyebrow, heading, body, data, is_visible)
+                VALUES (?, 1, 'rich_text', ?, ?, ?, ?, ?)
+            ", [
+                (int) $page['id'],
+                $data['eyebrow'] ?: null,
+                $data['heading'] ?: null,
+                $data['body'] ?: null,
+                $sectionData,
+                $data['is_visible'],
+            ]);
+        }
+
+        $this->audit->log('sector_page.update', 'page_sections', $sectionId, 'Updated sectors page introduction');
+        $this->flash('Sectors page section updated.');
+        return Response::redirect('/admin/sectors');
     }
 
     public function create(Request $request): Response
@@ -78,6 +170,19 @@ final class SectorController
         }
 
         $mediaId = $this->maybeUploadImage($request);
+        if ($this->uploadError !== null) {
+            return $this->render('admin/sectors/edit', [
+                'title' => 'New sector',
+                'activeNav' => 'sectors',
+                'breadcrumbs' => [
+                    ['label' => 'Dashboard', 'url' => '/admin'],
+                    ['label' => 'Sectors', 'url' => '/admin/sectors'],
+                    ['label' => 'New sector'],
+                ],
+                'sector' => $data,
+                'errors' => ['image' => $this->uploadError],
+            ]);
+        }
         $data['media_id'] = $mediaId;
 
         $id = $this->db->insert("
@@ -137,6 +242,19 @@ final class SectorController
         }
 
         $mediaId = $this->maybeUploadImage($request);
+        if ($this->uploadError !== null) {
+            return $this->render('admin/sectors/edit', [
+                'title' => 'Edit: ' . $existing['name'],
+                'activeNav' => 'sectors',
+                'breadcrumbs' => [
+                    ['label' => 'Dashboard', 'url' => '/admin'],
+                    ['label' => 'Sectors', 'url' => '/admin/sectors'],
+                    ['label' => $existing['name']],
+                ],
+                'sector' => array_merge($existing, $data),
+                'errors' => ['image' => $this->uploadError],
+            ]);
+        }
         if ($mediaId === null) {
             $mediaId = $existing['media_id'];
         }
@@ -199,13 +317,18 @@ final class SectorController
 
     private function maybeUploadImage(Request $request): ?int
     {
+        $this->uploadError = null;
         if (empty($_FILES['image']['name'])) return null;
         $result = $this->uploader->storeImage(
             $_FILES['image'],
             $request->string('image_alt'),
             null
         );
-        return $result['ok'] ? (int) $result['media']['id'] : null;
+        if (!$result['ok']) {
+            $this->uploadError = $result['error'] ?? 'The sector image could not be uploaded.';
+            return null;
+        }
+        return (int) $result['media']['id'];
     }
 
     private function emptySector(): array
