@@ -21,4 +21,16 @@ final class EventRepository
             LIMIT " . (int) $limit
         );
     }
+
+    public function past(int $limit = 50): array
+    {
+        return $this->db->select("
+            SELECT e.*, m.filename AS media_filename, m.alt_text AS media_alt
+            FROM events e
+            LEFT JOIN media m ON m.id = e.media_id
+            WHERE e.workflow_status = 'published' AND e.starts_at < NOW()
+            ORDER BY e.starts_at DESC
+            LIMIT " . (int) $limit
+        );
+    }
 }

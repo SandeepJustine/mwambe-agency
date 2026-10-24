@@ -35,6 +35,8 @@
                 <li><a href="/sectors">Sectors</a></li>
                 <li><a href="/impact">Our Impact</a></li>
                 <li><a href="/news">News &amp; Activities</a></li>
+                <li><a href="/events">Events &amp; Activities</a></li>
+                <li><a href="/documents">Resources &amp; Documents</a></li>
             </ul>
         </div>
 

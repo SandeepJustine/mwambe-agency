@@ -39,7 +39,16 @@ $isCurrentPage = static function (string $path) use ($currentPath): bool {
                 <li><a href="/our-work"<?= $isCurrentPage('/our-work') || str_starts_with($currentPath, '/programmes') ? ' aria-current="page"' : '' ?>>Our Work</a></li>
                 <li><a href="/sectors"<?= $isCurrentPage('/sectors') ? ' aria-current="page"' : '' ?>>Sectors</a></li>
                 <li><a href="/impact"<?= $isCurrentPage('/impact') ? ' aria-current="page"' : '' ?>>Our Impact</a></li>
-                <li><a href="/news"<?= $isCurrentPage('/news') || $isCurrentPage('/events') ? ' aria-current="page"' : '' ?>>News &amp; Activities</a></li>
+                <li class="primary-nav__item--dropdown<?= $isCurrentPage('/news') || $isCurrentPage('/events') || $isCurrentPage('/documents') ? ' is-active' : '' ?>">
+                    <a class="primary-nav__parent" href="/news"<?= $isCurrentPage('/news') ? ' aria-current="page"' : '' ?>>
+                        News &amp; Activities
+                        <span class="primary-nav__chevron" aria-hidden="true"></span>
+                    </a>
+                    <ul class="primary-nav__submenu" aria-label="News and activities">
+                        <li><a href="/events"<?= $isCurrentPage('/events') ? ' aria-current="page"' : '' ?>>Events &amp; Activities</a></li>
+                        <li><a href="/documents"<?= $isCurrentPage('/documents') ? ' aria-current="page"' : '' ?>>Resources &amp; Documents</a></li>
+                    </ul>
+                </li>
                 <li><a href="/partner-with-us"<?= $isCurrentPage('/partner-with-us') ? ' aria-current="page"' : '' ?>>Partner With Us</a></li>
                 <li><a href="/contact" class="btn btn--primary btn--sm"<?= $isCurrentPage('/contact') ? ' aria-current="page"' : '' ?>>Contact</a></li>
             </ul>

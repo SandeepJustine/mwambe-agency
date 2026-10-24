@@ -46,7 +46,7 @@
                             <p class="hero-slide__eyebrow"><?= e($slide['eyebrow']) ?></p>
                         <?php endif; ?>
 
-                        <h3 class="hero-slide__headline"><?= e($slide['headline']) ?></h3>
+                        <<?= $isFirst ? 'h1' : 'h2' ?> class="hero-slide__headline"><?= e($slide['headline']) ?></<?= $isFirst ? 'h1' : 'h2' ?>>
 
                         <p class="hero-slide__supporting"><?= e($slide['supporting']) ?></p>
 
